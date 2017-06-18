@@ -1,11 +1,13 @@
-FROM php:7.1-apache
+FROM php:7.1-fpm
+EXPOSE 80
 
 # Get repository and install wget and vim
 RUN apt-get update && apt-get install --no-install-recommends -y \
         wget \
         vim \
         git \
-        unzip
+        unzip \
+        nginx
 
 # Add PostgreSQL repository
 RUN echo "deb http://apt.postgresql.org/pub/repos/apt/ jessie-pgdg main" > /etc/apt/sources.list.d/pgdg.list
@@ -91,9 +93,5 @@ RUN pecl install apcu \
 ADD phpunit-6.2.1.phar /usr/local/bin/phpunit
 RUN chmod +x /usr/local/bin/phpunit
 
-# Enable module rewrite
-RUN a2enmod rewrite
-
-# Clean repository
-RUN apt-get clean \
-    && rm -rf /var/lib/apt/lists/*
+ADD default /etc/nginx/sites-available/default
+CMD /usr/local/sbin/php-fpm && nginx -g 'daemon off;'
