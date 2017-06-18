@@ -94,4 +94,5 @@ ADD phpunit-6.2.1.phar /usr/local/bin/phpunit
 RUN chmod +x /usr/local/bin/phpunit
 
 ADD default /etc/nginx/sites-available/default
-CMD /usr/local/sbin/php-fpm && nginx -g 'daemon off;'
+RUN service nginx start
+#CMD /usr/local/sbin/php-fpm && nginx -g 'daemon off;'
